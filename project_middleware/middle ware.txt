@@ -1,0 +1,288 @@
+Install Apache24
+1. Download the corresponding Windows binary source to your PC from the following site; 
+
+http://www.apachelounge.com/download/ 
+
+2. Unzip the zip file and then extract Apache24 folder. 
+
+3. Locate under C drive; 
+
+*C:\Apache24 
+
+4. Open C:\Apache24\conf\httpd.conf with text editor. 
+
+*Need to change the port number… 
+
+5. Change listening port from 80 to 8000; 
+
+#line58
+#listen 80
+listen 80006. Send the following command to register Apache24 in Windows Services; 
+
+cd /Apache24/bin && httpd -k install -n "Apache24"7. Check if with any error in Event Viewer; 
+
+eventvwr.msc*Windows Logs ⇒ Application 
+
+8. Open Windows Services; 
+
+services.msc9. Find “Apache24” and then start the service. 
+
+10. Check if with any error message in Event Viewer. 
+
+11. Access http://localhost:8000
+
+Apache HTTP Server2.4
+AllowOverwride Directive
+*Default value: None 
+
+*Change the value to use .htaccess files under htdocs documentroot; 
+
+httpd.conf 
+<Directory "c:/Apache24/htdocs">
+    #
+    # Possible values for the Options directive are "None", "All",
+    # or any combination of:
+    #   Indexes Includes FollowSymLinks SymLinksifOwnerMatch ExecCGI MultiViews
+    #
+    # Note that "MultiViews" must be named *explicitly* --- "Options All"
+    # doesn't give it to you.
+    #
+    # The Options directive is both complicated and important.  Please see
+    # http://httpd.apache.org/docs/2.4/mod/core.html#options
+    # for more information.
+    #
+    #Options FollowSymLinks
+    Options Indexes FollowSymLinks
+ 
+    #
+    # AllowOverride controls what directives may be placed in .htaccess files.
+    # It can be "All", "None", or any combination of the keywords:
+    #   AllowOverride FileInfo AuthConfig Limit
+    #
+    #AllowOverride None
+     AllowOverride All
+    #
+    # Controls who can get stuff from this server.
+    #
+    Require all granted
+</Directory>*Note — After chaging httpd.conf restart the server. 
+
+Basic Authentication
+Create .htaccess & .htpasswd files
+1. Create new text files and then rename; 
+
+htaccess 
+
+htpasswd 
+
+2. Open command prompt window and then send the following commands; 
+
+cd Desktop
+ren htaccess .htaccess
+ren htpasswd .htpasswd3. Create the following folder right under htdocs documentroot; 
+
+C:\Apache24\htdocs\restricted 
+
+4. Open .htaccess with text editor and then include the following code; 
+
+*.htaccess 
+
+AuthType Basic
+AuthName "Restricted Area"
+AuthUserFile C:\Apache24\htdocs\restricted\.htpasswd
+Require valid-user5. Open .htpasswd file with text editor and then include username and password of the user; *You can add users unlimitedly… 
+
+.htpasswd 
+
+admin:admin
+user:userHow to create / add .htpasswd file encrypted password(s)
+*If you create a new user; 
+
+C:\Apache24\bin\htpasswd.exe -c C:\Apache24\htdocs\restricted\.htpasswd user*htpasswd.exe -c [location of .htpasswd file] [username] 
+
+*After that it will ask you password so provide it twice. 
+
+*If you add an additional user; 
+
+C:\Apache24\bin\htpasswd.exe C:\Apache24\htdocs\restricted\.htpasswd admin*htpasswd.exe [location of .htpasswd file] [username] 
+
+*After that it will ask you password so provide it twice. 
+
+Install PHP as a module of Apache HTTP Server
+Official Site
+http://php.net/ 
+
+http://windows.php.net/download#php-7.1 
+
+Installation
+1. Download http://windows.php.net/downloads/releases/php-7.1.10-Win32-VC14-x86.zip 
+
+2. Create php folder on your desktop. 
+
+3. Unzip the content into the php folder. 
+
+4. Locate the php folder at; 
+
+C:\Apache24\php 
+
+5. Open C:\Apache24\conf\httpd.conf with text editor and then add the following line; 
+
+httpd.conf 
+#line140
+LoadModule php7_module "C:\Apache24\php\php7apache2_4.dll"6. Add the following line; 
+
+httpd.conf 
+#line281
+<IfModule dir_module>
+    DirectoryIndex index.php index.html
+</IfModule>7. Append the following code at the end of httpd.conf; 
+
+httpd.conf 
+<IfModule php7_module>
+  PHPINIDir "C:\Apache24\php"
+</IfModule>
+AddHandler application/x-httpd-php .php
+AddType application/x-httpd-php-source .phps8. Save httpd.conf. 
+
+9. Duplicate C:\Apache24\php\php.ini-development and then name it as 'php.ini'. 
+
+10. Restart Apache HTTP Server. 
+
+*Check Event Viewer(eventvwr.msc) if with any error. 
+
+11. Create phpinfo.php under C:\Apache24\htdocs; 
+
+phpinfo.php 
+<?php
+phpinfo();12. Access http://localhost:8000/phpinfo.php 
+
+*Check the value of 'Loaded Configuration File'. It should be; C:\Apache24\php\php.ini 
+
+13. Right-click on Coputer icon to open Properties. 
+
+14. Go to Advanced system settings. 
+
+15. Enter Environment Variable section. 
+
+16. In System variables area find variable: “path”. 
+
+17. Press Edit… button. 
+
+18. Check the variable value if “C:\Apache24\php” is included. If not included, add it. 
+
+*Note — Each path value should be separated with semi-colon(;). 
+
+19. Press OK button to save the settings. 
+Install MySQL
+Official Site
+https://dev.mysql.com/downloads/mysql/ 
+
+http://e-portalsvr:50000/misc/mysql-5.7.19-win32.zip 
+
+New Features
+Secure installation 
+
+JSON data type 
+
+Generated columns *Virtual columns 
+
+etc… 
+
+Installation
+1. Download http://e-portalsvr:50000/misc/mysql-5.7.19-win32.zip. 
+
+2. Unzip the zip file. 
+
+*Extract the application folder. 
+
+3. Rename the folder like “mysql”. 
+
+4. Locate it right under C drive; 
+
+* C:\mysql 
+
+5. Open command prompt window. 
+
+*Go to C:\mysql\bin directory by using Windows Explorer and then pressing shift key on you keyboard + right-click ⇒ select “Open command window here” so that you can set your current directory in the prompt window as “C:\mysql\bin” 
+
+6. Send the following command from prompt window; 
+
+mysqld --initialize*Note — If you encounter errors relating to “VCR”(Visual C++ Runtime), need to install it first. 
+
+*Microsoft Visual C++ Runtime 2013 will be needed. 
+
+*After sending the command mysqld.exe will create data folder under the application folder. The data folder is the storage of databases in the server. 
+
+7. Go inside the data folder and then find the following file; 
+
+[Your computer name].err 
+
+8. Open it with text editor so that you can find a password for root@localhost user; 
+
+2017-10-02T00:11:36.956811Z 1 [Note] A temporary password is generated for root@localhost: t0O8kwdGMt>g*For this case “t0O8kwdGMt>g” is the temporary password. 
+
+9. Create my.ini and then include the following code; 
+
+my.ini 
+[mysqld]
+basedir = "C:/mysql"
+datadir = "C:/mysql/data"
+tmpdir = "C:/temp/mysql"
+port = 3307
+log_error = "C:/mysql/logs/mysqld_error.log"
+default_password_lifetime = 0
+character_set_server = utf8
+collation_server = utf8_general_ci
+ 
+explicit_defaults_for_timestamp = true
+secure_file_priv = "C:/temp/mysql/file"
+ssl = false
+ 
+[mysql]
+default_character_set = utf810. Create the following folders if not existing; 
+
+C:\temp\mysql 
+
+C:\temp\mysql\file 
+
+C:\mysql\logs 
+
+11. Send the following command from prompt window; 
+
+mysqld --defaults-file="C:\mysql\my.ini" --console*When you will stop the server press Ctrl + C. 
+
+12. Open a new command prompt window. 
+
+*Note — Do NOT close another window. 
+
+13. Send the following command; 
+
+cd /mysql/bin && mysql --port=3307 -u root -p14. Copy the temporary password indicated in err file. 
+
+15. Send the following command to change password of root@localhost; 
+
+SET PASSWORD FOR 'root'@'localhost'=PASSWORD('admin');16. Log out from the server. 
+
+exit*Other than “exit” you can use; 
+
+\q 
+
+or 
+
+quit 
+
+17. Log in aggain; 
+
+mysql --port=3307 -u root -pNote — Provide your new password, “admin”. 
+
+18. After checking if your new password is already ok, stop the server in another prompt window by pressing Ctrl + C keys. 
+
+19. To install MySQL database server as a Windows Service send the following command; 
+
+mysqld --install "MySQL57"20. Send the following command to open Windows Services Window; 
+
+services.msc21. Find MySQL57 Windows Service and then start it. 
+
+22. Check if with any error message in Event Viewer; 
+
+eventvwr.msc
